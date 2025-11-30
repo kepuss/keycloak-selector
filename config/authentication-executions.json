@@ -1,0 +1,12 @@
+[
+  {
+    "provider": "method-selection-authenticator",
+    "authenticatorConfig": "selector",
+    "authenticator": "method-selection-authenticator",
+    "authenticatorFlow": false,
+    "requirement": "REQUIRED",
+    "priority": 0,
+    "autheticatorFlow": false,
+    "userSetupAllowed": false
+  }
+]

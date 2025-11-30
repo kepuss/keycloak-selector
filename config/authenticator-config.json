@@ -1,0 +1,10 @@
+{
+  "configs": [
+    {
+      "alias": "selector",
+      "config": {
+        "configJson": "{\r\n  \"selectionGroupClass\": \"auth-method-group-tiles\",\r\n  \"selections\": [\r\n    {\r\n      \"tileClass\": \"auth-method-tile\",\r\n      \"iconClass\": \"fas fa-envelope icon\",\r\n      \"value\": \"email_otp\",\r\n      \"displayTitle\": \"Email OTP\",\r\n      \"disabled\": false\r\n    },\r\n    {\r\n      \"tileClass\": \"auth-method-tile auth-method-tile-disabled\",\r\n      \"iconClass\": \"fas fa-sms icon\",\r\n      \"value\": \"sms_otp\",\r\n      \"displayTitle\": \"SMS OTP\",\r\n      \"disabled\": true\r\n    },\r\n    {\r\n      \"tileClass\": \"auth-method-tile auth-method-tile-disabled\",\r\n      \"iconClass\": \"fas fa-key icon\",\r\n      \"value\": \"webauthn\",\r\n      \"displayTitle\": \"Passkey\",\r\n      \"disabled\": true\r\n    }\r\n  ]\r\n}"
+      }
+    }
+  ]
+}

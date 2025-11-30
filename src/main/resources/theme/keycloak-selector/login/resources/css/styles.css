@@ -1,0 +1,45 @@
+.kc-form-group{
+    text-align: center;
+}
+
+/* Container for horizontal tiles */
+.auth-method-group-tiles {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin: 1rem 0;
+    color: white
+}
+
+/* Each tile */
+.auth-method-tile {
+    border: 2px solid #ccc;
+    background-color: #06c;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    width: 150px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Hide radio button */
+.auth-method-tile input[type="radio"] {
+    display: none;
+}
+
+
+/* Icon style */
+.auth-method-tile .icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #ffffff;
+}
+
+.auth-method-tile-disabled {
+    background-color: grey;
+}

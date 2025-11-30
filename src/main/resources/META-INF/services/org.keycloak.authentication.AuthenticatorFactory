@@ -1,0 +1,2 @@
+com.identityfirst.authenticator.MethodSelectionAuthenticatorFactory
+com.identityfirst.condition.AuthNoteEqualsConditionFactory
