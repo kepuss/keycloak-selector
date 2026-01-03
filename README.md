@@ -22,10 +22,9 @@ Demo setup can be loaded from the config folder.
 python3 setup.py
 ```
 
-<video controls width="70%">
-  <source src="/demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/user-attachments/assets/494f458d-4c5d-4813-b648-2edcca82e285
+
+
 
 ## Example JSON config
 
