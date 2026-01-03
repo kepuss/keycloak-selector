@@ -1,0 +1,46 @@
+name: Maven Release with Tag
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*' # Triggers on tags like v1.0.0 or v1.0.0-RC1
+
+jobs:
+  build_and_release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Grants write permission for creating the release and uploading assets
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+
+      - name: Set up Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17' # Specify your required Java version
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Extract version from Git tag
+        id: extract_version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+        # Removes the 'refs/tags/v' prefix to get the pure version number (e.g., 1.0.0)
+
+      - name: Update pom.xml version
+        run: |
+          mvn versions:set -DnewVersion=${RELEASE_VERSION} -Dmaven.scm.provider.skip=true -Dupdate-snapshots=false
+          mvn versions:commit
+
+      - name: Build the JAR
+        run: mvn clean package --batch-mode -DskipTests
+
+      - name: Create GitHub Release and upload artifact
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/*.jar # Uploads all JAR files from the target directory
+          name: Release ${{ env.RELEASE_VERSION }}
+          tag_name: ${{ github.ref }}
+          body: "Automated release based on tag ${{ github.ref_name }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Automatically provided by GitHub
