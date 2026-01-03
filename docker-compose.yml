@@ -15,3 +15,4 @@ services:
     volumes:
       # Mount the JAR directly from target folder
       - ./target/com.identityfirst.keycloak-selector-0.0.1.jar:/opt/keycloak/providers/com.identityfirst.keycloak-selector-0.0.1.jar:ro
+      - ./keycloak-2fa-email-authenticator-26.0.0-SNAPSHOT.jar:/opt/keycloak/providers/keycloak-2fa-email-authenticator-26.0.0-SNAPSHOT.jar:ro

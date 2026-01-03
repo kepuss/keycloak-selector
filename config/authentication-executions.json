@@ -1,11 +1,85 @@
 [
   {
+  "provider": "auth-username-password-form",
+  "authenticatorConfig": "aaaa",
+  "authenticator": "auth-username-password-form",
+  "authenticatorFlow": false,
+  "requirement": "REQUIRED",
+  "priority": 0,
+  "flowAlias": "selector",
+  "autheticatorFlow": false,
+  "userSetupAllowed": false
+},
+  {
     "provider": "method-selection-authenticator",
     "authenticatorConfig": "selector",
     "authenticator": "method-selection-authenticator",
     "authenticatorFlow": false,
     "requirement": "REQUIRED",
+    "priority": 1,
+    "flowAlias": "selector",
+    "autheticatorFlow": false,
+    "userSetupAllowed": false
+  },
+  {
+    "authenticatorConfig": "email-otp",
+    "authenticatorFlow": true,
+    "requirement": "CONDITIONAL",
+    "priority": 2,
+    "autheticatorFlow": true,
+    "flowAlias": "email-otp",
+    "userSetupAllowed": false
+  },
+  {
+    "authenticatorConfig": "email-otp-condition",
+    "provider": "auth-note-equals-condition",
+    "authenticator": "auth-note-equals-condition",
+    "authenticatorFlow": false,
+    "requirement": "REQUIRED",
     "priority": 0,
+    "flowAlias": "email-otp",
+    "autheticatorFlow": false,
+    "userSetupAllowed": false
+  },
+  {
+    "authenticatorConfig": "email-otp-authn",
+    "provider": "email-authenticator",
+    "authenticator": "email-authenticator",
+    "authenticatorFlow": false,
+    "requirement": "REQUIRED",
+    "priority": 1,
+    "flowAlias": "email-otp",
+    "autheticatorFlow": false,
+    "userSetupAllowed": false
+  },
+  {
+    "authenticatorConfig": "sms-otp",
+    "authenticatorFlow": true,
+    "requirement": "CONDITIONAL",
+    "priority": 3,
+    "autheticatorFlow": true,
+    "flowAlias": "sms-otp",
+    "userSetupAllowed": false
+  },
+  {
+    "authenticatorConfig": "sms-otp-condition",
+    "provider": "auth-note-equals-condition",
+    "authenticator": "auth-note-equals-condition",
+    "authenticatorFlow": false,
+    "requirement": "REQUIRED",
+    "priority": 0,
+    "flowAlias": "sms-otp",
+    "autheticatorFlow": false,
+    "userSetupAllowed": false
+  },
+  {
+    "authenticatorConfig": "email-otp-authn",
+    "provider": "email-authenticator",
+    "authenticator": "email-authenticator",
+    "authenticatorFlow": false,
+    "requirement": "REQUIRED",
+    "priority": 1,
+    "flowAlias": "sms-otp",
     "autheticatorFlow": false,
     "userSetupAllowed": false
   }

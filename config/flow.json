@@ -1,8 +1,22 @@
-{
-  "id": "740f3fb6-4dc6-4342-9a53-328a17ece081",
-  "alias": "selector",
-  "description": "selector",
-  "providerId": "basic-flow",
-  "topLevel": true,
-  "builtIn": false
-}
+[
+  {
+    "id": "740f3fb6-4dc6-4342-9a53-328a17ece081",
+    "alias": "selector",
+    "description": "selector",
+    "providerId": "basic-flow",
+    "topLevel": true,
+    "builtIn": false
+  },
+  {
+    "alias": "email-otp",
+    "description": "Email OTP subflow",
+    "provider": "registration-page-form",
+    "type": "basic-flow"
+  },
+  {
+    "alias": "sms-otp",
+    "description": "SMS OTP subflow",
+    "provider": "registration-page-form",
+    "type": "basic-flow"
+  }
+]

@@ -51,58 +51,78 @@ def main():
     headers = {"Authorization": f"Bearer {token}"}
 
     # --- Flow ---
-    flow = load_json(FLOW_FILE)
-    flow_alias = flow["alias"]
-    print(f"[+] Creating flow '{flow_alias}'")
-    flow_resp = post(f"/admin/realms/{KC_REALM}/authentication/flows", token, flow)
-    flow_id = flow["id"]
 
-    # --- Authenticator Configs ---
-    # configs_wrapper = load_json(CONFIGS_FILE)
-    # configs_list = configs_wrapper.get("configs") if "configs" in configs_wrapper else configs_wrapper
-    # config_alias_to_id = {}
-    # for c in configs_list:
-    #     print(f"[+] Creating authenticator config '{c['alias']}'")
-    #     r = post(f"/admin/realms/{KC_REALM}/authentication/config", token, c)
-    #     loc = r.headers.get("Location", "")
-    #     config_id = loc.rstrip("/").split("/")[-1]
-    #     config_alias_to_id[c['alias']] = config_id
+    flows = load_json(FLOW_FILE)
+    main_flow = "selector"
+    main_flow_id="740f3fb6-4dc6-4342-9a53-328a17ece081"
+    for flow in flows:
+        flow_alias = flow["alias"]
+        print(f"[+] Creating flow '{flow_alias}'")
+        if flow_alias == main_flow:
+            flow_resp = post(f"/admin/realms/{KC_REALM}/authentication/flows", token, flow)
+        else:
+            flow_resp = post(f"/admin/realms/{KC_REALM}/authentication/flows/{main_flow}/executions/flow", token, flow)
+        # flow_id = flow["id"]
 
-    # --- Executions ---
-    executions = load_json(EXECUTIONS_FILE)
-    for e in executions:
-        provider = e["provider"]
-        print(f"[+] Creating execution for provider '{provider}'")
-        # 1) POST execution
-        r = post(f"/admin/realms/{KC_REALM}/authentication/flows/{flow_alias}/executions/execution",
-                 token, {"provider": provider})
-        # determine execution ID
-        execs = requests.get(f"{KC_HOST}/admin/realms/{KC_REALM}/authentication/flows/{flow_alias}/executions",
-                             headers=headers, verify=KC_VERIFY_SSL).json()
-        exec_id = next(x["id"] for x in execs if x["providerId"] == provider)
-        print(f"  Execution ID: {exec_id}")
+        # --- Authenticator Configs ---
+        # configs_wrapper = load_json(CONFIGS_FILE)
+        # configs_list = configs_wrapper.get("configs") if "configs" in configs_wrapper else configs_wrapper
+        # config_alias_to_id = {}
+        # for c in configs_list:
+        #     print(f"[+] Creating authenticator config '{c['alias']}'")
+        #     r = post(f"/admin/realms/{KC_REALM}/authentication/config", token, c)
+        #     loc = r.headers.get("Location", "")
+        #     config_id = loc.rstrip("/").split("/")[-1]
+        #     config_alias_to_id[c['alias']] = config_id
 
-        # 2) POST update requirement/priority
-        update_body = {
-            "id": exec_id,
-            "requirement": e.get("requirement", "REQUIRED"),
-            "priority": e.get("priority", 0)
+        # --- Executions ---
+        executions = load_json(EXECUTIONS_FILE)
+        for e in executions:
+            if e["flowAlias"] != flow_alias:
+                continue
+            if not e["authenticatorFlow"]:
+                # continue
+                provider = e["provider"]
+                print(f"[+] Creating execution for provider '{provider}'")
+                # 1) POST execution
+                r = post(f"/admin/realms/{KC_REALM}/authentication/flows/{flow_alias}/executions/execution",
+                         token, {"provider": provider})
+                # determine execution ID
+                execs = requests.get(f"{KC_HOST}/admin/realms/{KC_REALM}/authentication/flows/{flow_alias}/executions",
+                                     headers=headers, verify=KC_VERIFY_SSL).json()
+                exec_id = next(x["id"] for x in execs if x["providerId"] == provider)
+                print(f"  Execution ID: {exec_id}")
+            else:
+                # determine execution ID
+                execs = requests.get(f"{KC_HOST}/admin/realms/{KC_REALM}/authentication/flows/{main_flow}/executions",
+                                     headers=headers, verify=KC_VERIFY_SSL).json()
+                exec_id = next(x["id"] for x in execs if x["displayName"] == flow_alias)
+                print(f"  Execution ID: {exec_id}")
 
-        }
-        put(f"/admin/realms/{KC_REALM}/authentication/flows/{flow_alias}/executions", token, update_body)
+            # 2) POST update requirement/priority
+            update_body = {
+                "id": exec_id,
+                "requirement": e.get("requirement", "REQUIRED"),
+                "priority": e.get("priority", 0)
 
-        # 3) POST attach authenticator config if provided
-        configs_wrapper = load_json(CONFIGS_FILE)
-        configs_list = configs_wrapper.get("configs") if "configs" in configs_wrapper else configs_wrapper
-        config_alias_to_id = {}
-        for c in configs_list:
-            print(f"[+] Creating authenticator config '{c['alias']}'")
-            r = post(f"/admin/realms/{KC_REALM}/authentication/executions/{exec_id}/config", token, c)
+            }
+            put(f"/admin/realms/{KC_REALM}/authentication/flows/{flow_alias}/executions", token, update_body)
+
+            # 3) POST attach authenticator config if provided
+            configs_wrapper = load_json(CONFIGS_FILE)
+            configs_list = configs_wrapper.get("configs") if "configs" in configs_wrapper else configs_wrapper
+            config_alias_to_id = {}
+            config_name = e["authenticatorConfig"]
+            for c in configs_list:
+                if c["alias"] != config_name:
+                    continue
+                print(f"[+] Creating authenticator config '{c['alias']}'")
+                r = post(f"/admin/realms/{KC_REALM}/authentication/executions/{exec_id}/config", token, c)
 
     # --- Client ---
     client = load_json(CLIENT_FILE)
     print(f"[+] Creating client '{client['clientId']}'")
-    client["authenticationFlowBindingOverrides"]["browser"] = flow_id
+    client["authenticationFlowBindingOverrides"]["browser"] = main_flow_id
     post(f"/admin/realms/{KC_REALM}/clients", token, client)
 
     print("[✓] All done.")

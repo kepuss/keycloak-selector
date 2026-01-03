@@ -1,7 +1,33 @@
-# keycloak-selector
+# Keycloak-Selector
+
+This is a simple Keycloak selector to build config-driven flow selection pages.
+It is based on the Auth Note and conditional flows.
+
+method-selection-authenticator is used for showing the tiles with options.
+
+auth-note-equals-condition is used to execute the selected flow.
 
 
-## JSON config
+Tested with Keycloak 26.0.7.
+
+## Demo
+
+Start docker compose
+```
+docker compose up
+```
+
+Demo setup can be loaded from the config folder.
+```
+python3 setup.py
+```
+
+<video controls width="70%">
+  <source src="/demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+## Example JSON config
 
 ```json
 {
